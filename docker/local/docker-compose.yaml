@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - type: bind
+        source: ../../
+        target: /var/www
+    stdin_open: true
+    tty: true
+    networks:
+      - fastapi-network
+  redis:
+    image: redis:alpine3.18
+    ports:
+      - "6379:6379"
+    networks:
+      - fastapi-network
+  
+  rabbitmq:
+    image: rabbitmq:3.12.12-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+     - fastapi-network
+networks:
+  fastapi-network:
+    external: true
