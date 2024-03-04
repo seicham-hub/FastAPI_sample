@@ -1,0 +1,55 @@
+scalar DateTime
+
+type Query{
+    getAllUser:getAllUserResult
+}
+
+type Mutation{
+    updateUserById(input: updateUserByIdInput):updateUserByIdResult
+}
+
+# error display on browser
+type UserError{
+    code:Int!
+    message:String!
+}
+
+type User{
+    id:Int
+    name:String
+    email: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
+}
+
+# user data tha can be updated
+input UserUpdateInput{
+    name:String
+    email: String
+    updatedAt: DateTime
+}
+
+"""
+getAllUserの引数、戻り値
+"""
+
+type getAllUserResult{
+    result: User
+    userErrors: [UserError]
+}
+
+"""
+updateUserの引数、戻り値
+"""
+
+input updateUserByIdInput{
+    id: Int
+    updateData: UserUpdateInput
+}
+
+
+type updateUserByIdResult{
+    result: Boolean
+    userErrors: [UserError]
+}
