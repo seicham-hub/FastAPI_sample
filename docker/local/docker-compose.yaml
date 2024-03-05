@@ -31,6 +31,22 @@ services:
       - "15672:15672"
     networks:
      - fastapi-network
+
+  mysql:
+    image: mysql:8.0.36-debian
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+    - "3306:3306"
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
 networks:
   fastapi-network:
     external: true
+
+volumes:
+  my-db:
