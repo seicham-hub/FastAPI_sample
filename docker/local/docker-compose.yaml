@@ -33,12 +33,16 @@ services:
      - fastapi-network
 
   mysql:
-    image: mysql:8.0.36-debian
+    build: 
+      context: .
+      dockerfile: Dockerfile_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
     - "3306:3306"
+    networks:
+     - fastapi-network
     volumes:
       - my-db:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
