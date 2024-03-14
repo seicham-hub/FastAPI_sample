@@ -1,6 +1,7 @@
 scalar DateTime
 
 type Query{
+    getUserById:getUserByIdResult
     getAllUser:getAllUserResult
 }
 
@@ -18,12 +19,12 @@ type User{
     id:Int
     name:String
     email: String
-    createdAt: DateTime
-    updatedAt: DateTime
-    deletedAt: DateTime
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
 }
 
-# user data tha can be updated
+# user data that can be updated
 input UserUpdateInput{
     name:String
     email: String
@@ -31,11 +32,19 @@ input UserUpdateInput{
 }
 
 """
+getUserByIdの引数、戻り値
+"""
+
+type getUserByIdResult{
+    result: User
+    userErrors: [UserError]
+}
+"""
 getAllUserの引数、戻り値
 """
 
 type getAllUserResult{
-    result: User
+    result: [User]
     userErrors: [UserError]
 }
 

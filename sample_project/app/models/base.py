@@ -13,11 +13,11 @@ class Base(DeclarativeBase):
 
 class TimeStampMixin(object):
     @declared_attr
-    def created_at():
+    def created_at(cls):
         return mapped_column(DateTime, server_default=func.now())
 
     @declared_attr
-    def updated_at():
+    def updated_at(cls):
         return mapped_column(
             DateTime,
             server_default=func.now(),
@@ -25,5 +25,5 @@ class TimeStampMixin(object):
         )
 
     @declared_attr
-    def deleted_at():
+    def deleted_at(cls):
         return mapped_column(DateTime)

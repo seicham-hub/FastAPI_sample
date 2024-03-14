@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.dialects.mysql import TINYINT
-from base import Base, TimeStampMixin
+from app.models.base import Base, TimeStampMixin
 
 
 class Message(Base, TimeStampMixin):

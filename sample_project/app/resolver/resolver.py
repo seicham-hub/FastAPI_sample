@@ -4,15 +4,20 @@ from ariadne import (
     ObjectType,
 )
 
+from app import controllers
+
 query = ObjectType("Query")
 mutation = ObjectType("Query")
 
 
+@query.field("getUserById")
+def resolve_get_user_by_id(_, info, input):
+    return controllers.get_user_by_id(info, input)
+
+
 @query.field("getAllUser")
-def resolve_get_all_user(_, info, input):
-    # request = info.context["request"]
-    # user_agent = request.headers.get("user-agent", "guest")
-    return {"result": {"id": 1, "name": "yamada taro"}}
+def resolve_get_all_user(_, info):
+    return controllers.get_all_user(info)
 
 
 @mutation.field("updateUserById")
