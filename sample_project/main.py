@@ -13,6 +13,7 @@ import os
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup時のイベント
+
     pubsub.connect
 
     loop = asyncio.get_running_loop()

@@ -1,10 +1,12 @@
 from app import models
 from sqlalchemy.exc import SQLAlchemyError
 from app.common.error_msg import ERROR_MSG
-from common.common import verify_password
+from common.common import verify_password, create_access_token
+from datetime import timedelta
+import os
 
 
-def authenticate_user(info, input):
+def login(info, input):
     try:
         password = input["password"]
         email = input["email"]
@@ -16,12 +18,21 @@ def authenticate_user(info, input):
         print(e)
 
         return {
-            "user_errors": [
-                {"code": 500, "message": ERROR_MSG.FAILED_TO_RETRIEVE_DATA.value}
-            ]
+            "user_errors": [{"code": 500, "message": ERROR_MSG.FAILED_TO_LOGIN.value}]
         }
 
-    verify_password(password, user.password_hash)
+    if not verify_password(password, user.password_hash):
+        return {
+            "user_errors": [{"code": 500, "message": ERROR_MSG.FAILED_TO_LOGIN.value}]
+        }
+
+    access_token_expires = timedelta(minutes=os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+    access_token = create_access_token(
+        data={"user_id": user.id, "email": user.email},
+        expires_delta=access_token_expires,
+    )
+
+    return {"access_token": access_token}
 
 
 def get_user_by_id(info, input):

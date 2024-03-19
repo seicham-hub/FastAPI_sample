@@ -28,6 +28,14 @@ def get_user_by_id(user_id: int) -> Optional[User]:
     return result
 
 
+def get_user_by_email(email: str) -> Optional[User]:
+    with Session() as session:
+        stmt = select(User).where(User.email == email)
+        result = session.scalar(stmt)
+
+    return result
+
+
 def get_all_user() -> list[User]:
 
     with Session() as session:

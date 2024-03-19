@@ -47,10 +47,10 @@ CREATE TABLE conversation_user_relation (
     FOREIGN KEY (conversation_id) REFERENCES conversations(id)
 );
 
-
+-- default password is "password"
 INSERT INTO users (full_name, email, password_hash) VALUES
-('taro', 'taro@example.com', 'hashedpassword1'),
-('hanako', 'hanako@example.com', 'hashedpassword2');
+('taro', 'taro@example.com', '$2b$12$q9pklky1vc4I3JkF5L3LGeBj.U5xk8fAqMsnVVFxzkWtH9ikqsb7W'),
+('hanako', 'hanako@example.com', '$2b$12$q9pklky1vc4I3JkF5L3LGeBj.U5xk8fAqMsnVVFxzkWtH9ikqsb7W');
 
 INSERT INTO conversations () VALUES
 (),
