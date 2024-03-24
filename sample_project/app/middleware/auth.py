@@ -12,18 +12,21 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request, call_next):
 
-        token = request.headers.get("Authorization")
+        if "no-auth" not in str(request.url):
+            token = request.headers.get("Authorization")
 
-        public_key = get_public_key()
+            public_key = get_public_key()
 
-        try:
-            payload = jwt.decode(token, public_key, algorithms=os.environ["ALGORITHM"])
-        except JWTError:
-            return JSONResponse(
-                {"error": {"code": 401, "message": ERROR_MSG.INVALID_TOKEN.value}}
-            )
+            try:
+                payload = jwt.decode(
+                    token, public_key, algorithms=os.environ["ALGORITHM"]
+                )
+            except Exception:
+                return JSONResponse(
+                    {"error": {"code": 401, "message": ERROR_MSG.INVALID_TOKEN.value}}
+                )
 
-        request.state = payload
+            request.state.decoded_token = payload
         response = await call_next(request)
 
         return response

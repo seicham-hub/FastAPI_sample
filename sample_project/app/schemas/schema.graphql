@@ -6,7 +6,6 @@ type Query{
 }
 
 type Mutation{
-    login(input:loginInput):loginResults
     updateUserById(input: updateUserByIdInput):updateUserByIdResult
 }
 
@@ -18,7 +17,7 @@ type UserError{
 
 type User{
     id:Int
-    name:String
+    fullName:String
     email: String
     createdAt: String
     updatedAt: String
@@ -49,20 +48,7 @@ type getAllUserResult{
     userErrors: [UserError]
 }
 
-"""
-loginの引数、戻り値
-"""
 
-input loginInput{
-    email: String
-    password: String
-}
-
-
-type logindResult{
-    accessToken: String
-    userErrors: [UserError]
-}
 """
 updateUserの引数、戻り値
 """

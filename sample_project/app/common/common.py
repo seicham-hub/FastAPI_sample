@@ -18,14 +18,14 @@ def get_password_hash(password):
 
 
 def get_public_key():
-    with open("public_key.pem", "r") as file:
+    with open("/var/www/sample_project/app/public_key_sample.pem", "r") as file:
         public_key = file.read()
 
     return public_key
 
 
 def get_private_key():
-    with open("private_key.pem", "r") as file:
+    with open("/var/www/sample_project/app/private_key_sample.pem", "r") as file:
         private_key = file.read()
 
     return private_key
@@ -41,6 +41,6 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
-        to_encode, os.environ["JWT_SECRET_KEY"], algorithm=os.environ["ALGORITHM"]
+        to_encode, get_private_key(), algorithm=os.environ["ALGORITHM"]
     )
     return encoded_jwt

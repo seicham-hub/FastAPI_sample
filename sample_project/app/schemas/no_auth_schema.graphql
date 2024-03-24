@@ -1,0 +1,24 @@
+type Query{
+    login(input:loginInput):loginResult
+}
+
+# error display on browser
+type UserError{
+    code:Int!
+    message:String!
+}
+
+"""
+loginの引数、戻り値
+"""
+
+input loginInput{
+    email: String
+    password: String
+}
+
+
+type loginResult{
+    accessToken: String
+    userErrors: [UserError]
+}

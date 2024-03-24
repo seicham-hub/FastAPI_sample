@@ -1,7 +1,7 @@
 from app import models
 from sqlalchemy.exc import SQLAlchemyError
 from app.common.error_msg import ERROR_MSG
-from common.common import verify_password, create_access_token
+from app.common.common import verify_password, create_access_token
 from datetime import timedelta
 import os
 
@@ -26,7 +26,9 @@ def login(info, input):
             "user_errors": [{"code": 500, "message": ERROR_MSG.FAILED_TO_LOGIN.value}]
         }
 
-    access_token_expires = timedelta(minutes=os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+    access_token_expires = timedelta(
+        minutes=int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+    )
     access_token = create_access_token(
         data={"user_id": user.id, "email": user.email},
         expires_delta=access_token_expires,

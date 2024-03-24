@@ -7,7 +7,7 @@ from ariadne import (
 from app import controllers
 
 query = ObjectType("Query")
-mutation = ObjectType("Query")
+mutation = ObjectType("Mutation")
 
 
 @query.field("getUserById")
@@ -30,5 +30,6 @@ raw_schema = load_schema_from_path("/var/www/sample_project/app/schemas/schema.g
 schema = make_executable_schema(
     raw_schema,
     query,
+    mutation,
     convert_names_case=True,
 )
