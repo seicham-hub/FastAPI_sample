@@ -2,6 +2,7 @@ from sqlalchemy import (
     Integer,
     String,
     select,
+    text,
 )
 from app.models.base import Base, TimeStampMixin
 from sqlalchemy.orm import mapped_column, relationship
@@ -41,5 +42,21 @@ def get_all_user() -> list[User]:
     with Session() as session:
         stmt = select(User)
         result = session.scalars(stmt).all()
+
+    return result
+
+
+def get_users_joined_in_conversation(conversation_id: int) -> list[User]:
+    with Session() as session:
+        stmt = text(
+            "SELECT u.id, u.full_name, u.email, u.password_hash from users as u "
+            + "LEFT JOIN conversation_user_relation as cu ON u.id = cu.user_id "
+            + "LEFT JOIN conversation as c ON cu.conversation_id = c.id "
+            + "WHERE c.id = :conversation_id"
+        )
+
+        sql_params = {"conversation_id": conversation_id}
+
+        result = session.execute(stmt, **sql_params).all()
 
     return result

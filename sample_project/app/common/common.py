@@ -3,10 +3,21 @@ from fastapi.security import OAuth2PasswordBearer
 from typing import Union
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
+from app import models
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def check_permission_for_conversation(user_id: int, conversation_id: int) -> bool:
+    users: list = models.get_users_joined_in_conversation(conversation_id)
+
+    for user in users:
+        if user.id == user_id:
+            return True
+
+    return False
 
 
 def verify_password(plain_password, hashed_password):

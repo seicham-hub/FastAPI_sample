@@ -14,7 +14,7 @@ import os
 async def lifespan(app: FastAPI):
     # startup時のイベント
 
-    pubsub.connect
+    await pubsub.connect()
 
     loop = asyncio.get_running_loop()
     queue_name = "heavy_task_finished"

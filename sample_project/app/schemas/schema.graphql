@@ -7,6 +7,11 @@ type Query{
 
 type Mutation{
     updateUserById(input: updateUserByIdInput):updateUserByIdResult
+    sendMessage(input: sendMessageInput):sendMessageResult
+}
+
+type Subscription{
+    onNewConversationMessage(input: onNewConversationMessageInput):onNewConversationMessageResult
 }
 
 # error display on browser
@@ -47,6 +52,17 @@ type getAllUserResult{
     result: [User]
     userErrors: [UserError]
 }
+"""
+sendMessageの引数、戻り値
+"""
+input sendMessageInput{
+    conversationId: Int!
+    message: String!
+}
+type sendMessageResult{
+    result: [User]
+    userErrors: [UserError]
+}
 
 
 """
@@ -61,5 +77,20 @@ input updateUserByIdInput{
 
 type updateUserByIdResult{
     result: Boolean
+    userErrors: [UserError]
+}
+
+
+"""
+onNewConversationMessageの引数、戻り値
+"""
+
+input onNewConversationMessageInput{
+    conversationId: Int
+}
+
+
+type onNewConversationMessageResult{
+    message: String
     userErrors: [UserError]
 }
