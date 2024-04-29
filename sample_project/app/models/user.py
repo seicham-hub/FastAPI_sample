@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 from app.models.base import Base, TimeStampMixin
 from sqlalchemy.orm import mapped_column, relationship
-from app.database.database import Session
+from app.database.database import MySession
 from typing import Optional
 
 
@@ -22,7 +22,7 @@ class User(Base, TimeStampMixin):
 
 
 def get_user_by_id(user_id: int) -> Optional[User]:
-    with Session() as session:
+    with MySession() as session:
         stmt = select(User).where(User.id == user_id)
         result = session.execute(stmt).first()
 
@@ -30,7 +30,7 @@ def get_user_by_id(user_id: int) -> Optional[User]:
 
 
 def get_user_by_email(email: str) -> Optional[User]:
-    with Session() as session:
+    with MySession() as session:
         stmt = select(User).where(User.email == email)
         result = session.scalar(stmt)
 
@@ -39,7 +39,7 @@ def get_user_by_email(email: str) -> Optional[User]:
 
 def get_all_user() -> list[User]:
 
-    with Session() as session:
+    with MySession() as session:
         stmt = select(User)
         result = session.scalars(stmt).all()
 
@@ -47,16 +47,18 @@ def get_all_user() -> list[User]:
 
 
 def get_users_joined_in_conversation(conversation_id: int) -> list[User]:
-    with Session() as session:
+    with MySession() as session:
         stmt = text(
-            "SELECT u.id, u.full_name, u.email, u.password_hash from users as u "
-            + "LEFT JOIN conversation_user_relation as cu ON u.id = cu.user_id "
-            + "LEFT JOIN conversation as c ON cu.conversation_id = c.id "
-            + "WHERE c.id = :conversation_id"
+            """
+            SELECT u.id, u.full_name, u.email, u.password_hash from users as u 
+            LEFT JOIN conversation_user_relation as cu ON u.id = cu.user_id 
+            LEFT JOIN conversations as c ON cu.conversation_id = c.id 
+            WHERE c.id = :conversation_id
+            """
         )
 
         sql_params = {"conversation_id": conversation_id}
 
-        result = session.execute(stmt, **sql_params).all()
+        result = session.execute(stmt, sql_params).all()
 
     return result

@@ -6,6 +6,7 @@ type Query{
 }
 
 type Mutation{
+    createConversation(input: createConversationInput):createConversationResult
     updateUserById(input: updateUserByIdInput):updateUserByIdResult
     sendMessage(input: sendMessageInput):sendMessageResult
 }
@@ -60,11 +61,24 @@ input sendMessageInput{
     message: String!
 }
 type sendMessageResult{
-    result: [User]
+    result: Boolean
     userErrors: [UserError]
 }
 
 
+"""
+createConversationの引数、戻り値
+"""
+
+input createConversationInput{
+    userIds: [Int]
+}
+
+
+type createConversationResult{
+    result: Boolean
+    userErrors: [UserError]
+}
 """
 updateUserの引数、戻り値
 """

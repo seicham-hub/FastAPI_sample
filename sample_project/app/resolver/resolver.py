@@ -24,6 +24,11 @@ def resolve_get_all_user(_, info):
     return controllers.get_all_user(info)
 
 
+@mutation.field("createConversation")
+def resolve_createConversation(_, info, input):
+    return controllers.create_conversation(info, input)
+
+
 @mutation.field("updateUserById")
 def resolve_update_user_by_id(_, info, input):
     return {"result": True}
@@ -38,15 +43,18 @@ def resolve_send_message(_, info, input):
 async def message_generator(obj, info, input):
     async with pubsub.subscribe(channel="message_channel") as subscriber:
         async for row_message in subscriber:
-            message = json.loads(row_message)
+            try:
+                message = json.loads(row_message.message)
 
-            if (message["conversation_id"]) == input["conversation_id"]:
-                yield message
+                if (message["conversation_id"]) == input["conversation_id"]:
+                    yield message
+            except Exception as e:
+                print(e)
 
 
 @subscription.field("onNewConversationMessage")
 def resolve_on_new_conversation_message(message, info, input):
-    return message
+    return {"message": message.get("content", "")}
 
 
 raw_schema = load_schema_from_path("/var/www/sample_project/app/schemas/schema.graphql")

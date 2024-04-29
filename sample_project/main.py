@@ -10,6 +10,7 @@ import uvicorn
 import os
 
 
+# 起動時、停止時に行われる処理を登録
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup時のイベント
@@ -26,10 +27,12 @@ async def lifespan(app: FastAPI):
     pubsub.disconnect()
 
 
+# アプリケーションのルート登録
 app = FastAPI(lifespan=lifespan)
 # app.mount("/rest", rest_api)
 app.mount("/graphql", graphql_api)
 
+# アプリケーション起動
 if __name__ == "__main__":
     if os.environ["MODE"] == "local":
         uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

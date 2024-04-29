@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, URL
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker, Session
 import os
 from contextlib import contextmanager
 
@@ -23,7 +23,7 @@ engine = create_engine(
 # session_makerのみ使用して一つのインスタンスを使いまわすと、スレッドセーフでない
 # scoped_sessionは何度インスタンス化しても一つのセッションを使う
 # マルチスレッドの場合は新規インスタンスが作成される
-Session = scoped_session(
+MySession = scoped_session(
     sessionmaker(
         autocommit=False,
         autoflush=False,
@@ -35,7 +35,7 @@ Session = scoped_session(
 @contextmanager
 def get_db_session():
     try:
-        session = Session()
+        session: Session = MySession()
         yield session
         session.commit()
     except Exception:

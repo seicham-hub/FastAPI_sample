@@ -1,14 +1,14 @@
 from app import models
 from sqlalchemy.exc import SQLAlchemyError
 from app.common.error_msg import ERROR_MSG
-from app.common.common import check_permission_for_conversation,
+from app.common.common import check_permission_for_conversation
 
 import json
 
 from app.pub_sub_store import pubsub
 
 
-def send_message(info, input):
+async def send_message(info, input):
 
     try:
         message = input["message"]
@@ -19,6 +19,9 @@ def send_message(info, input):
         user_id = decoded_token.get("user_id")
     except KeyError as e:
         print(e)
+        return {
+            "user_errors": [{"code": 400, "message": ERROR_MSG.INVALID_PARAMETER.value}]
+        }
 
     # この会話にメッセージを操作する権限があるかチェック
     if not check_permission_for_conversation(user_id, conversation_id):
@@ -48,6 +51,6 @@ def send_message(info, input):
         "sender": user_id,
         "content": message,
     }
-    pubsub.publish("message_channel", json.dump(message_to_publish))
+    await pubsub.publish("message_channel", json.dumps(message_to_publish))
 
     return {"result": True}

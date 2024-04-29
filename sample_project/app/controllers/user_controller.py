@@ -12,11 +12,14 @@ def login(info, input):
         email = input["email"]
     except KeyError as e:
         print(e)
+        return {
+            "user_errors": [{"code": 400, "message": ERROR_MSG.INVALID_PARAMETER.value}]
+        }
+
     try:
         user = models.get_user_by_email(email)
     except SQLAlchemyError as e:
         print(e)
-
         return {
             "user_errors": [{"code": 500, "message": ERROR_MSG.FAILED_TO_LOGIN.value}]
         }
