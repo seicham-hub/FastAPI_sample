@@ -24,7 +24,14 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 )
             except Exception:
                 return JSONResponse(
-                    {"error": {"code": 401, "message": ERROR_MSG.INVALID_TOKEN.value}}
+                    {
+                        "errors": [
+                            {
+                                "message": ERROR_MSG.INVALID_TOKEN.value,
+                                "extensions": {"code": 401},
+                            }
+                        ]
+                    }
                 )
 
             request.state.decoded_token = payload
